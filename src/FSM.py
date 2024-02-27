@@ -7,7 +7,7 @@ import math
 import argparse
 import signal
 
-import roslib; roslib.load_manifest('smach_tutorials')
+# import roslib; roslib.load_manifest('smach_tutorials')
 
 # ROS
 import rospy
@@ -23,8 +23,8 @@ import xArm_Motion as xArm_Motion
 # import utils_plot as fsm_plot
 
 # Global terms:
-xArm = xArm_Motion.xArm_Motion("192.168.1.196") # xArm6 IP address
-xArm.initialize_robot()
+# xArm = xArm_Motion.xArm_Motion("192.168.1.196") # xArm6 IP address
+# xArm.initialize_robot()
 
 """
 States of the system -
@@ -59,47 +59,45 @@ class State_Machine:
 
         self.transitions = {
             'state_1': {self.outcomes_s_1[0] : 'state_2'},
-            'state_2': {self.outcomes_s_2[0]: 'state_1'}
+            'state_2': {self.outcomes_s_2[0]: 'stateB'}
         }
 
-        def m_1 (self):
-            rospy.loginfo('Finding nearest Cornstalk')
+    def m_1 (self):
+        rospy.loginfo('Finding nearest Cornstalk')
 
-        def m_2 (self):
-            rospy.loginfo('Doing Width Detection')
+    def m_2 (self):
+        rospy.loginfo('Doing Width Detection')
 
-        def m_5 (self):
-            rospy.loginfo('Logging Data')
+    def m_5 (self):
+        rospy.loginfo('Logging Data')
 
-        # State 1 - Home/Stow Position
-        class state_1(smach.State):
+    # State 1 - Home/Stow Position
+    class state_1(smach.State):
 
-            def __init__(self):
-                smach.State.__init__(self, 
-                                    outcomes = self.outcomes_s_1,
-                                    input_keys = ['state_1_input'])
+        def __init__(self):
+            smach.State.__init__(self, 
+                                outcomes = State_Machine().outcomes_s_1,
+                                input_keys = ['state_1_input'])
 
-            def execute(self, userdata):
-                rospy.loginfo('Executing state 1')
-                if userdata.state_1_input == 1:
-                    State_Machine.m_1()
-                    return self.outcomes_s_1[0]
+        def execute(self, userdata):
+            rospy.loginfo('Executing state 1')
+            if userdata.state_1_input == 1:
+                State_Machine().m_1()
+                return State_Machine().outcomes_s_1[0]
 
-        # State 2 - Move to nearest CornStalk
-        class state_2(smach.State):
-            def __init__(self):
-                smach.State.__init__(self, 
-                                    outcomes = self.outcomes_s_2,
-                                    input_keys = ['state_2_input'])
+    # State 2 - Move to nearest CornStalk
+    class state_2(smach.State):
+        def __init__(self):
+            smach.State.__init__(self, 
+                                outcomes = State_Machine().outcomes_s_2,
+                                input_keys = ['state_2_input'])
 
-            def execute(self, userdata):
-                rospy.loginfo('Executing state 2')
-                if userdata.state_2_input == 1:
-                    State_Machine.m_2()
-                    return self.outcomes_s_2[0]
+        def execute(self, userdata):
+            rospy.loginfo('Executing state 2')
+            if userdata.state_2_input == 1:
+                State_Machine().m_2()
+                return State_Machine().outcomes_s_2[0]
             
-        self.state_1 = state_1
-        self.state_2 = state_2
 
     def main(self):
         rospy.init_node('xarm_state_machine')
@@ -110,13 +108,13 @@ class State_Machine:
         
         # Open the container
         with state_A:
-
             # Add States to State A
-            smach.StateMachine.add('state_1', self.state_1(),
+            # State_Machine.state_1()
+            smach.StateMachine.add('state_1', State_Machine.state_1(),
                                     transitions = self.transitions['state_1'],
                                     remapping = {'state_1_input':'flag_A'})
             
-            smach.StateMachine.add('state_2', self.state_2(),
+            smach.StateMachine.add('state_2', State_Machine.state_2(),
                                 transitions = self.transitions['state_2'],
                                 remapping = {'state_2_input':'flag_A'})
 
