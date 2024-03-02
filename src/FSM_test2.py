@@ -1,9 +1,13 @@
+#!/usr/bin/env python
+
 import os
 import sys
 import time
 import math
 import argparse
 import signal
+
+# import roslib; roslib.load_manifest('smach_tutorials')
 
 # ROS
 import rospy
@@ -19,11 +23,6 @@ import xArm_Motion as xArm_Motion
 # import utils_plot as fsm_plot
 
 # Global terms:
-<<<<<<< Updated upstream
-xArm = xArm_Motion.xArm_Motion("192.168.1.196") # xArm6 IP address
-xArm.initialize_robot()
-
-=======
 # xArm = xArm_Motion.xArm_Motion("192.168.1.196") # xArm6 IP address
 # xArm.initialize_robot()
 
@@ -168,61 +167,19 @@ class state4(smach.State):
 def main():
     rospy.init_node('nimo_state_machine')
 
-    Start_state = smach.StateMachine(outcomes = ['end'])    # Outcome of Main State Machine
+    start_state = smach.StateMachine(outcomes = ['end'])    # Outcome of Main State Machine
+    # start_state.userdata.flag_a = 1
+    # start_state.userdata.flag_b = 2
+    # start_state.userdata.flag_c = 3
 
-    with Start_state:
+    with start_state:
 
-        smach.StateMachine.add('State_0',state0(),
-                               transitions = {'start':'State_A'})  # Go to State Machine A
-        
-        state_a_sm = smach.StateMachine(outcomes = ['sb_sm'])   # Outcome of State Machine A
-        state_a_sm.userdata.flag_a = 1
-
-        with state_a_sm:
-
-            smach.StateMachine.add('State_1',state1(),
-                                    transitions = {'s2':'State_2',
-                                                  's3':'State_3'},
-                                    remapping = {'state_1_input':'flag_a'})
-            
-            smach.StateMachine.add('State_2',state2(),
-                                    transitions = {'sb':'sb_sm',
-                                                  's3':'State_3'},
-                                    remapping = {'state_2_input':'flag_a'})
+        smach.StateMachine.add('STATE_1',state1(),
+                                transitions = {'s2':'STATE_2',
+                                               's3':'STATE_3'})
     
             
-            state_b_sm = smach.StateMachine(outcomes = ['sc_sm'])   # Outcome of State Machine B
-            state_b_sm.userdata.flag_b = 2
-
-            with state_b_sm:
-                        
-                smach.StateMachine.add('State_3',state3(),
-                                            transitions = {'sc':'sc_sm',
-                                                        's4':'State_4'},
-                                            remapping = {'state_3_input':'flag_b'})
-            
-            
-                state_c_sm = smach.StateMachine(outcomes = ['finished'])    # Outcome of State Machine C
-                state_c_sm.userdata.flag_c = 3
-
-                with state_c_sm:
-                    
-                    smach.StateMachine.add('State_4',state4(),
-                                            transitions = {'stop':'finished'},
-                                            remapping = {'state_4_input':'flag_c'})
-                    
-        smach.StateMachine.add('State_A',state_a_sm,
-                                transitions = {'sb_sm':'State_B'})    # State Machine A transitioning to State Machine B
-                
-        smach.StateMachine.add('State_C',state_c_sm,                    
-                                    transitions = {'finished':'end'})     # State Machine C transitioning to the output of Main State Machine
-        
-        smach.StateMachine.add('State_B',state_b_sm,
-                                    transitions = {'sc_sm':'State_C'})    # State Machine B transitioning to State Machine C
-    
-            
-    outcome = Start_state.execute()
+    outcome = start_state.execute()
 
 if __name__ == '__main__':
     main()
->>>>>>> Stashed changes
