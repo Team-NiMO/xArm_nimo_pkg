@@ -21,8 +21,6 @@ from configparser import ConfigParser
 # custom helper library
 import xArm_Motion as xArm_Motion
 
-<<<<<<< Updated upstream
-=======
 def get_args_parser():
     parser = argparse.ArgumentParser('xArm_motion', add_help=False)
     # relevant parameters
@@ -58,4 +56,3 @@ if __name__ == "__main__":
 
 
     print(" ================ completed script ============ ")
->>>>>>> Stashed changes

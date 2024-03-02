@@ -6,12 +6,9 @@ from geometry_msgs.msg import Pose
 #API 
 from xarm.wrapper import XArmAPI
 
-<<<<<<< Updated upstream
-=======
 #Perception
 from stalk_detect.srv import GetStalk
 
->>>>>>> Stashed changes
 class xArm_Motion():
     def __init__(self, ip_addr):
         print(f"---- creating xArm_Wrapper for ip {ip_addr} ----")
@@ -27,9 +24,6 @@ class xArm_Motion():
     # home position motion
     def go_to_home(self):
         print(f"---- going to home position ----")
-<<<<<<< Updated upstream
-        self.arm.set_servo_angl
-=======
         self.arm.set_servo_angle(angle=[0, -90, 0, 0, 0, 0], is_radian=False, wait=True)
 
     # default vertical stow position

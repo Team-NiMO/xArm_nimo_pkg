@@ -19,11 +19,9 @@ import xArm_Motion as xArm_Motion
 # import utils_plot as fsm_plot
 
 # Global terms:
-<<<<<<< Updated upstream
 xArm = xArm_Motion.xArm_Motion("192.168.1.196") # xArm6 IP address
 xArm.initialize_robot()
 
-=======
 # xArm = xArm_Motion.xArm_Motion("192.168.1.196") # xArm6 IP address
 # xArm.initialize_robot()
 
@@ -225,4 +223,3 @@ def main():
 
 if __name__ == '__main__':
     main()
->>>>>>> Stashed changes
