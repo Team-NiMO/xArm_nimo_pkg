@@ -82,7 +82,72 @@ class xArm_Motion():
     # Functions that integrate with end effector
     #######################################################
 
->>>>>>> Stashed changes
+
+    ##### TEST: MOVING TO THE STALK POSE #####
+    def go_to_stalk_pose(self, x_mm,y_mm,z_mm):
+        print(f"now do the APPROACH MOTION")
+        
+        x_mm_tuned_offset = 29
+
+        x_mm_gripper_width = 80+5 #80mm is roughly center of gripper to edge of C clamp, 5 is fine-tuned offset
+        x_mm_with_gripper_offest = x_mm + x_mm_gripper_width + x_mm_tuned_offset
+
+        y_mm_tuned_offset = -32
+        print(f"x_mm, x_mm_with_gripper_offest {x_mm, x_mm_with_gripper_offest}")
+
+        
+        # x_mm_deeper_clamp_width = 18
+        x_mm_deeper_clamp_insert = 14
+        x_mm_deeper_clamp_retract = 25
+
+        z_mm_tuned = z_mm
+
+        y_mm_overshoot = 8
+        y_mm_funnel = 12
+
+        print(f"y_mm+y_mm_tuned_offset {y_mm+y_mm_tuned_offset}")
+        print(f"y_mm+y_mm_tuned_offset+ y_mm_overshoot {y_mm+y_mm_tuned_offset+y_mm_overshoot}")
+
+
+        print(f" ---- going to stalk pose  ----")
+
+        print(f" 1. move X align 1/10 ")
+        # self.arm.set_position_aa(axis_angle_pose=[x_mm_with_gripper_offest, 0, 0, 0, 0, 0], relative=True, wait=True)
+        print(f"x_mm_with_gripper_offest: {x_mm_with_gripper_offest}")
+        # self.arm.set_position_aa(axis_angle_pose=[x_mm_with_gripper_offest, y_mm+y_mm_tuned_offset+y_mm_overshoot, z_mm_tuned, 0, 0, 0], relative=True, wait=True)
+        print(f" 2. move Y approach  2/10")
+        # self.arm.set_position_aa(axis_angle_pose=[0, y_mm+y_mm_tuned_offset, 0, 0, 0, 0], relative=True, wait=True)
+        print(f"y_mm+y_mm_tuned_offset: {y_mm+y_mm_tuned_offset}")
+        
+        print(f" 2.5 move Y to compensate overshoot  2.5/10")
+        # self.arm.set_position_aa(axis_angle_pose=[0, y_mm_overshoot, 0, 0, 0, 0], relative=True, wait=True)
+        print(f"y_mm_overshoot: {y_mm_overshoot}")
+        
+        print(f" 3. move Z to down 3/10 with z: {z_mm_tuned}")
+        # self.arm.set_position_aa(axis_angle_pose=[0, 0, z_mm_tuned, 0, 0, 0], relative=True, wait=True)
+        print(f"z_mm_tuned: {z_mm_tuned}")
+
+        print(f" 4. move X center w gripper 4/10")
+        # self.arm.set_position_aa(axis_angle_pose=[-x_mm_gripper_width-x_mm_tuned_offset, 0, 0, 0, 0, 0], relative=True, wait=True)
+        print(f"-x_mm_gripper_width-x_mm_tuned_offset: {-x_mm_gripper_width-x_mm_tuned_offset}")
+
+        print(f" 5. move X go deeper 5/10")
+        # self.arm.set_position_aa(axis_angle_pose=[-x_mm_deeper_clamp_insert, 0, 0, 0, 0, 0], relative=True, wait=True)
+        print(f"-x_mm_deeper_clamp_insert: {-x_mm_deeper_clamp_insert}")
+
+        print(f" 6. move X to recenter 6/10")
+        # self.arm.set_position_aa(axis_angle_pose=[+x_mm_deeper_clamp_retract, 0, 0, 0, 0, 0], relative=True, wait=True)
+        print(f"x_mm_deeper_clamp_retract: {x_mm_deeper_clamp_retract}")
+
+        print(f" 6.5 move Y to get corn on edge of funnel 6.5/10")
+        # self.arm.set_position_aa(axis_angle_pose=[0, y_mm_funnel, 0, 0, 0, 0], relative=True, wait=True)
+        print(f"y_mm_funnel: {y_mm_funnel}")
+
+    def go_to_plane(self):
+        print(" ---- going to plane joint position ----")
+        # self.arm.set_servo_angle(angle=[0, -45.2, -43.9, 0, 0, 0], is_radian=False, wait=True)
+        self.arm.set_servo_angle(angle=[0, -78.4, -21.1, 0, 10.4, 0], is_radian=False, wait=True)
+
     
 
 if __name__ == "__main__":

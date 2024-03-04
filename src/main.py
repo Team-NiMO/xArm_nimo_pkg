@@ -1,3 +1,5 @@
+#!/usr/bin/env python3 
+
 import os
 import sys
 import time
@@ -40,17 +42,38 @@ if __name__ == "__main__":
     xArm = xArm_Motion.xArm_Motion(args.ip) #SNOTE - creates an xarm wrapper with the ip passed through with the get_args_parser function
     xArm.initialize_robot()
 
-    #print count down 3,2,1
-    for i in range(3,0,-1):
-        print(f" starting in {i}... ")
-        time.sleep(1)
+    # #print count down 3,2,1
+    # for i in range(3,0,-1):
+    #     print(f" starting in {i}... ")
+    #     time.sleep(1)
 
-    ## REQ DETECT BASE CODE:
-    rospy.loginfo("Executing the state REQ_DETECT")
-    detected_stalk_pose = xArm.stalk_pose()
-    
+    ## Hook identified cornstalks:
+    rospy.loginfo("Executing the hard coded hook motion")
 
+    x = -0.03628206015960567
+    y = -0.1458352749289401
+    z = -0.1441743369126926
 
+    # x = -x #gripper x coord is opposite direction of robot base x coord
+    # z = -z #gripper x coord is opposite direction of robot base x coord 
+
+    xArm.go_to_home()
+    xArm.go_to_plane()
+
+    xArm.go_to_stalk_pose(x*1000, y*1000, z*1000)
+
+    time.sleep(1)
+    # xArm.go_to_home()
+    # xArm.go_to_plane()
+
+    # x = -0.05
+    # y = -0.2
+    # z = -0.05
+
+    # xArm.go_to_stalk_pose(x*1000, y*1000, z*1000)
+
+    # xArm.go_to_plane()
+    # xArm.go_to_home()
     
     xArm.arm.disconnect()
 
