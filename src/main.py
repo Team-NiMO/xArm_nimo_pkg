@@ -54,15 +54,16 @@ if __name__ == "__main__":
     y = -0.1458352749289401
     z = -0.1441743369126926
 
-    # x = -x #gripper x coord is opposite direction of robot base x coord
-    # z = -z #gripper x coord is opposite direction of robot base x coord 
+    x = -x #gripper x coord is opposite direction of robot base x coord
+    z = -z #gripper x coord is opposite direction of robot base x coord 
 
     xArm.go_to_home()
-    xArm.go_to_plane()
+    print(xArm.arm.get_position)
+    # xArm.go_to_plane()
 
-    xArm.go_to_stalk_pose(x*1000, y*1000, z*1000)
+    # xArm.go_to_stalk_pose(x*1000, y*1000, z*1000)
 
-    time.sleep(1)
+    # time.sleep(1)
     # xArm.go_to_home()
     # xArm.go_to_plane()
 
@@ -74,6 +75,25 @@ if __name__ == "__main__":
 
     # xArm.go_to_plane()
     # xArm.go_to_home()
+
+    # xArm.arm.set_position(412, -48.1, 267.7, 180, 0, 0.2, is_radian=None)
+    # FK = xArm.arm.get_joint_states()
+
+    # xArm.vertical_stow_reset()
+
+    # pose = [412, -48.1, 267.7, 180, 0, 0.2]
+    # pose2 = [412.6, -48.5, 267.5, 180, 0, 0]
+
+    # IK = xArm.arm.get_inverse_kinematics(pose)
+    # IK2 = xArm.arm.get_inverse_kinematics(pose2)
+
+
+    # print("\n\nFK:", FK)
+    # print("\n\nIK:", IK)
+    # print("\n\nIK2:", IK2)
+    # xArm.arm.set_position(412, -48.1, 267.7, 180, 0, 0.2, is_radian=None)
+    # xArm.arm.set_servo_angle(angle=pose, is_radian=None,wait=True)
+
     
     xArm.arm.disconnect()
 

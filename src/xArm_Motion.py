@@ -112,35 +112,35 @@ class xArm_Motion():
         print(f" ---- going to stalk pose  ----")
 
         print(f" 1. move X align 1/10 ")
-        # self.arm.set_position_aa(axis_angle_pose=[x_mm_with_gripper_offest, 0, 0, 0, 0, 0], relative=True, wait=True)
+        self.arm.set_position_aa(axis_angle_pose=[x_mm_with_gripper_offest, 0, 0, 0, 0, 0], relative=True, wait=True)
         print(f"x_mm_with_gripper_offest: {x_mm_with_gripper_offest}")
-        # self.arm.set_position_aa(axis_angle_pose=[x_mm_with_gripper_offest, y_mm+y_mm_tuned_offset+y_mm_overshoot, z_mm_tuned, 0, 0, 0], relative=True, wait=True)
+        self.arm.set_position_aa(axis_angle_pose=[x_mm_with_gripper_offest, y_mm+y_mm_tuned_offset+y_mm_overshoot, z_mm_tuned, 0, 0, 0], relative=True, wait=True)
         print(f" 2. move Y approach  2/10")
-        # self.arm.set_position_aa(axis_angle_pose=[0, y_mm+y_mm_tuned_offset, 0, 0, 0, 0], relative=True, wait=True)
+        self.arm.set_position_aa(axis_angle_pose=[0, y_mm+y_mm_tuned_offset, 0, 0, 0, 0], relative=True, wait=True)
         print(f"y_mm+y_mm_tuned_offset: {y_mm+y_mm_tuned_offset}")
         
         print(f" 2.5 move Y to compensate overshoot  2.5/10")
-        # self.arm.set_position_aa(axis_angle_pose=[0, y_mm_overshoot, 0, 0, 0, 0], relative=True, wait=True)
+        self.arm.set_position_aa(axis_angle_pose=[0, y_mm_overshoot, 0, 0, 0, 0], relative=True, wait=True)
         print(f"y_mm_overshoot: {y_mm_overshoot}")
         
         print(f" 3. move Z to down 3/10 with z: {z_mm_tuned}")
-        # self.arm.set_position_aa(axis_angle_pose=[0, 0, z_mm_tuned, 0, 0, 0], relative=True, wait=True)
+        self.arm.set_position_aa(axis_angle_pose=[0, 0, z_mm_tuned, 0, 0, 0], relative=True, wait=True)
         print(f"z_mm_tuned: {z_mm_tuned}")
 
         print(f" 4. move X center w gripper 4/10")
-        # self.arm.set_position_aa(axis_angle_pose=[-x_mm_gripper_width-x_mm_tuned_offset, 0, 0, 0, 0, 0], relative=True, wait=True)
+        self.arm.set_position_aa(axis_angle_pose=[-x_mm_gripper_width-x_mm_tuned_offset, 0, 0, 0, 0, 0], relative=True, wait=True)
         print(f"-x_mm_gripper_width-x_mm_tuned_offset: {-x_mm_gripper_width-x_mm_tuned_offset}")
 
         print(f" 5. move X go deeper 5/10")
-        # self.arm.set_position_aa(axis_angle_pose=[-x_mm_deeper_clamp_insert, 0, 0, 0, 0, 0], relative=True, wait=True)
+        self.arm.set_position_aa(axis_angle_pose=[-x_mm_deeper_clamp_insert, 0, 0, 0, 0, 0], relative=True, wait=True)
         print(f"-x_mm_deeper_clamp_insert: {-x_mm_deeper_clamp_insert}")
 
         print(f" 6. move X to recenter 6/10")
-        # self.arm.set_position_aa(axis_angle_pose=[+x_mm_deeper_clamp_retract, 0, 0, 0, 0, 0], relative=True, wait=True)
+        self.arm.set_position_aa(axis_angle_pose=[+x_mm_deeper_clamp_retract, 0, 0, 0, 0, 0], relative=True, wait=True)
         print(f"x_mm_deeper_clamp_retract: {x_mm_deeper_clamp_retract}")
 
         print(f" 6.5 move Y to get corn on edge of funnel 6.5/10")
-        # self.arm.set_position_aa(axis_angle_pose=[0, y_mm_funnel, 0, 0, 0, 0], relative=True, wait=True)
+        self.arm.set_position_aa(axis_angle_pose=[0, y_mm_funnel, 0, 0, 0, 0], relative=True, wait=True)
         print(f"y_mm_funnel: {y_mm_funnel}")
 
     def go_to_plane(self):

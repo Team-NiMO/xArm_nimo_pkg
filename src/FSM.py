@@ -19,8 +19,8 @@ import xArm_Motion as xArm_Motion
 # import utils_plot as fsm_plot
 
 # Global terms:
-xArm = xArm_Motion.xArm_Motion("192.168.1.196") # xArm6 IP address
-xArm.initialize_robot()
+# xArm = xArm_Motion.xArm_Motion("192.168.1.196") # xArm6 IP address
+# xArm.initialize_robot()
 
 # xArm = xArm_Motion.xArm_Motion("192.168.1.196") # xArm6 IP address
 # xArm.initialize_robot()
@@ -47,8 +47,9 @@ Method 5: Log Data
 Method 6: Desired Arc Movement
 Method 7: Insert Sensor (actuate linear actuator)
 Method 8: Remove Sensor (retract linear actuator)
-"""
 
+"""
+sensor = False
 
 def m_1 ():
     rospy.loginfo('Finding nearest Cornstalk')
@@ -56,8 +57,14 @@ def m_1 ():
 def m_2 ():
     rospy.loginfo('Doing Width Detection')
 
-def m_3 ():
+def m_3 (self, flag):
+    print(flag)
     rospy.loginfo('Go to Clean Nozzle')
+    if (flag == 1 or flag == 2):
+        if (not sensor):
+            return False
+        else:
+            return True
 
 def m_4 ():
     rospy.loginfo('Go to Calibrate Nozzle')
@@ -74,152 +81,119 @@ def m_7 ():
 def m_8 ():
     rospy.loginfo('Remove Sensor-Retract Linear Actuator')
 
+def m_9 ():
+    rospy.loginfo('Move arm to the nearest cornstalk')
 
-# State 0 - start
-class state0(smach.State):
+def m_10 ():
+    rospy.loginfo('Stow Position')
 
-    def __init__(self):
-        smach.State.__init__(self,
-                             outcomes = ['start'])
-        
-    def execute(self, userdata):
-        rospy.loginfo('Running State 0')
-        return 'start'
+def m_11 ():
+    rospy.loginfo('Replace Sensor')
 
-# State 1 - Home/Stow Position
+
+# State 1 - Finding Cornstalk
 class state1(smach.State):
 
     def __init__(self):
         smach.State.__init__(self,
-                            outcomes = ['s2','s3'],
-                            input_keys = ['state_1_input'])
+                             outcomes = ['cleaning_calibrating'])
         
     def execute(self, userdata):
-        print(userdata.state_1_input)
         rospy.loginfo('Running State 1')
+        m_10()
+        m_1()
+        m_9()
+        m_2()
+        return 'cleaning_calibrating'
 
-        if userdata.state_1_input == 1:
-            m_1()
-            return 's2'
-        elif userdata.state_1_input == 2:
-            return 's3'
-        elif userdata.state_1_input == 3:
-            return 's2'
-    
+# State 2 - Cleaning and Calibrating
 class state2(smach.State):
 
     def __init__(self):
         smach.State.__init__(self,
-                             outcomes = ['sb','s3'],
-                             input_keys = ['state_2_input'])
-    
+                            outcomes = ['insertion','replace'],
+                            input_keys = ['c_c_ip'])    #outcome2: Replace
+        
     def execute(self, userdata):
-        print(userdata.state_2_input)
         rospy.loginfo('Running State 2')
-
-        if userdata.state_2_input == 1:
-            m_2()
-            return 'sb'
-        elif userdata.state_2_input == 3:
-            m_5()
-            m_6()
-            m_7()
-            m_8()
-            return 's3'
-
+        m_10()
+        m_5()
+        # decision_1 = m_3(userdata.c_c_ip)
+        m_5()
+        m_4()
+        decision_2 = m_3(self, userdata.c_c_ip)
+        if not decision_2:
+            return 'replace'
+        else:
+            return 'insertion'
+    
+# State 3: Insertion
 class state3(smach.State):
 
     def __init__(self):
         smach.State.__init__(self,
-                             outcomes = ['sc','s4'],
-                             input_keys = ['state_3_input'])
+                             outcomes = ['replace'],
+                             input_keys = ['insert_ip'])
     
     def execute(self, userdata):
-        print(userdata.state_3_input)
         rospy.loginfo('Running State 3')
-
-        if userdata.state_3_input == 2:
-            m_3()
-            m_5()
-            m_4()
-            m_5()
-            m_3()
-            return 'sc'
-        elif userdata.state_3_input == 3:
-            m_3()
-            return 's4'
-
+        m_10()
+        m_9()
+        m_5()
+        m_6()
+        m_7()
+        m_8()
+        decision = m_3(self, userdata.insert_ip)
+        if not decision:
+            return 'replace'
+    
+# State 4: Replace
 class state4(smach.State):
 
     def __init__(self):
         smach.State.__init__(self,
-                             outcomes = ['stop'],
-                             input_keys = ['state_4_input'])
+                             outcomes = ['replace_stop'])
     
     def execute(self, userdata):
-        print(userdata.state_4_input)
-        rospy.loginfo('Running State 4')
+        rospy.loginfo('Running State 3')
+        m_10()
+        m_9()
+        m_5()
+        m_6()
+        m_7()
+        m_8()
+        m_3()
+        return 'replace_stop'
 
-        if userdata.state_4_input == 3:
-            return 'stop'
         
 def main():
     rospy.init_node('nimo_state_machine')
 
-    Start_state = smach.StateMachine(outcomes = ['end'])    # Outcome of Main State Machine
+    start_state = smach.StateMachine(outcomes = ['stop'])    # Outcome of Main State Machine
+    start_state.userdata.flag_a = 1
+    start_state.userdata.flag_b = 2
+    start_state.userdata.flag_c = 3
 
-    with Start_state:
+    with start_state:
 
-        smach.StateMachine.add('State_0',state0(),
-                               transitions = {'start':'State_A'})  # Go to State Machine A
+        smach.StateMachine.add('Finding_Cornstalk',state1(),
+                               transitions = {'cleaning_calibrating':'Cleaning_Calibrating'})  # Go to State B
         
-        state_a_sm = smach.StateMachine(outcomes = ['sb_sm'])   # Outcome of State Machine A
-        state_a_sm.userdata.flag_a = 1
-
-        with state_a_sm:
-
-            smach.StateMachine.add('State_1',state1(),
-                                    transitions = {'s2':'State_2',
-                                                  's3':'State_3'},
-                                    remapping = {'state_1_input':'flag_a'})
-            
-            smach.StateMachine.add('State_2',state2(),
-                                    transitions = {'sb':'sb_sm',
-                                                  's3':'State_3'},
-                                    remapping = {'state_2_input':'flag_a'})
-    
-            
-            state_b_sm = smach.StateMachine(outcomes = ['sc_sm'])   # Outcome of State Machine B
-            state_b_sm.userdata.flag_b = 2
-
-            with state_b_sm:
-                        
-                smach.StateMachine.add('State_3',state3(),
-                                            transitions = {'sc':'sc_sm',
-                                                        's4':'State_4'},
-                                            remapping = {'state_3_input':'flag_b'})
-            
-            
-                state_c_sm = smach.StateMachine(outcomes = ['finished'])    # Outcome of State Machine C
-                state_c_sm.userdata.flag_c = 3
-
-                with state_c_sm:
-                    
-                    smach.StateMachine.add('State_4',state4(),
-                                            transitions = {'stop':'finished'},
-                                            remapping = {'state_4_input':'flag_c'})
-                    
-        smach.StateMachine.add('State_A',state_a_sm,
-                                transitions = {'sb_sm':'State_B'})    # State Machine A transitioning to State Machine B
-                
-        smach.StateMachine.add('State_C',state_c_sm,                    
-                                    transitions = {'finished':'end'})     # State Machine C transitioning to the output of Main State Machine
+        smach.StateMachine.add('Cleaning_Calibrating',state2(),
+                               transitions = {'insertion':'Insertion','replace':'stop'},
+                               remapping = {'c_c_ip':'flag_b'})  # Go to State B
         
-        smach.StateMachine.add('State_B',state_b_sm,
-                                    transitions = {'sc_sm':'State_C'})    # State Machine B transitioning to State Machine C
+        smach.StateMachine.add('Insertion',state3(),
+                               transitions = {'replace':'stop'},
+                               remapping = {'insert_ip':'flag_c'})  # Go to State B
     
-            
-    outcome = Start_state.execute()
+    sis = smach_ros.IntrospectionServer('server_name', start_state, '/NiMo_SM')
+    sis.start()
+
+    outcome = start_state.execute()
+
+    rospy.spin()
+    sis.stop()
 
 if __name__ == '__main__':
     main()
